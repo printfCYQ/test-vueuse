@@ -12,6 +12,7 @@
     "@iconify-json/ic": "^1.1.17",
     "@unocss/reset": "^0.58.0",
     "@vueuse/core": "^10.7.0",
+    "html2canvas-pro": "^1.5.7",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
     "vue": "^3.3.11",

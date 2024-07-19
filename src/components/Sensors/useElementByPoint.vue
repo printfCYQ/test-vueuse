@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import {
-useElementBounding,
-useElementByPoint,
-useEventListener,
-useMouse,
+  useElementBounding,
+  useElementByPoint,
+  useEventListener,
+  useMouse,
 } from "@vueuse/core";
 import { computed, reactive } from "vue";
+import html2canvas from 'html2canvas-pro';
 
 const { x, y } = useMouse({ type: "client" });
 const { element } = useElementByPoint({ x, y });
@@ -15,8 +16,6 @@ useEventListener("scroll", bounding.update, true);
 
 const boxStyles = computed(() => {
   if (element.value) {
-    // console.log(element.value);
-
     return {
       display: "block",
       width: `${bounding.width}px`,
@@ -33,17 +32,22 @@ const boxStyles = computed(() => {
 });
 
 onMounted(() => {
-  window.addEventListener("keydown", async (e) => {
-    console.log(e, "e");
-    if (e.ctrlKey && e.key === "a" && element.value) {
-      console.log(window);
-      const canvas = await window!.html2canvas(element.value);
-      console.log(canvas);
+  window.addEventListener("mousedown", async (e) => {
+    await nextTick(); // 等待 DOM 更新 避免直接截图
+    if (e.button === 0 && element.value && showBorderAndPoint.value) {
+      showBorderAndPoint.value = false;
+      await nextTick(); // 等待 DOM 更新 取消边框的现实
+      const canvas = await html2canvas(element.value, {
+        scale: 2 // 增加分辨率
+      });
       const imgData = canvas.toDataURL("image/png");
       const link = document.createElement("a");
       link.href = imgData;
       link.download = "screenshot.png";
       link.click();
+    } else if (e.button === 2) {
+      showBorderAndPoint.value = false;
+      e.preventDefault();
     }
   });
 });
@@ -51,32 +55,22 @@ onMounted(() => {
 const pointStyles = computed<Record<string, string | number>>(() => ({
   transform: `translate(calc(${x.value}px - 50%), calc(${y.value}px - 50%))`,
 }));
+
+const showBorderAndPoint = ref(false)
+const selectDom = () => {
+  showBorderAndPoint.value = true
+}
 </script>
 
 <template>
-  <div
-    :style="boxStyles"
-    fixed
-    pointer-events-none
-    z-9999
-    border="1 $vp-c-brand"
-  />
-  <div
-    :style="pointStyles"
-    fixed
-    top-0
-    left-0
-    pointer-events-none
-    w-2
-    h-2
-    rounded-full
-    bg-green-400
-    shadow
-    z-999
-  />
+  <div v-if="showBorderAndPoint" :style="boxStyles" fixed pointer-events-none z-9999>
+    11
+  </div>
+  <div v-if="showBorderAndPoint" :style="pointStyles" fixed top-0 left-0 pointer-events-none w-2 h-2 rounded-full
+    bg-green-400 shadow z-999 />
   <n-card>
     <n-space>
-      <n-button>Default</n-button>
+      <n-button @click="selectDom"> Select Dom </n-button>
       <n-button type="tertiary"> Tertiary </n-button>
       <n-button type="primary"> Primary </n-button>
       <n-button type="info"> Info </n-button>
