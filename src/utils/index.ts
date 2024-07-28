@@ -1,10 +1,16 @@
 import { NIcon } from "naive-ui";
 
-export function renderIcon(icon: Component = menuIcon()) {
-    return () => h(NIcon, null, { default: () => h(icon) });
+export function renderIcon(iconName: string = '') {
+    console.log(iconName, 'iconName');
+    return () => h(NIcon, null, { default: () => h(menuIcon(iconName)) });
 }
 
-export function menuIcon(className: string = "i-ic:round-auto-awesome-mosaic") {
-    const defalutClass = "text-2xl color-[#18A058]";
-    return () => h("div", { class: defalutClass + " " + className });
+export function menuIcon(className: string) {
+    console.log(className === '', 'className');
+    return () => h("div", { class: className || 'i-ic:round-auto-awesome-mosaic w-1em h-1em' });
+}
+
+// 大驼峰->小驼峰
+export const pascalToCamel = (pascalCase: string) => {
+    return pascalCase.charAt(0).toLowerCase() + pascalCase.slice(1);
 }

@@ -5,61 +5,39 @@
         :options="menuOptions"
         @update:value="handleUpdateValue"
         :default-value="menuCurrent"
+        accordion
       />
     </n-layout-sider>
     <n-layout>
-      <component :is="component"></component>
+      <router-view></router-view>
     </n-layout>
   </n-layout>
 </template>
 
 <script setup lang="ts">
-import animationMenu from "@/components/Animation/menu";
-import arrayMenu from "@/components/Array/menu";
-import browserMenu from "@/components/Browser/menu";
-import componentMenu from "@/components/Component/menu";
-import useVModel from "@/components/Component/useVModel/useVModel.vue";
-import elementsMenu from "@/components/Elements/menu";
-import networkMenu from "@/components/Network/menu";
-import reactivityMenu from "@/components/Reactivity/menu";
-import sensorsMenu from "@/components/Sensors/menu";
-import stateMenu from "@/components/State/menu";
-import timeMenu from "@/components/Time/menu";
-import utilitiesMenu from "@/components/Utilities/menu";
-import watchMenu from "@/components/Watch/menu";
-import type { MenuOption } from "naive-ui";
-// import { renderIcon } from "@/utils/index";
+import { renderIcon } from "@/utils";
+import { useRoute, useRouter } from "vue-router";
+import { aboutRoute } from "../router/index";
 
-const component = shallowRef<Component>(useVModel);
+const router = useRouter();
+const route = useRoute();
+const menuCurrent = ref(route.fullPath);
 
-const menuCurrent = ref("useVModel");
-
-type NewMenuOption = MenuOption & {
-  component: Component;
-};
-
-function handleUpdateValue(key: string, item: NewMenuOption) {
-  console.log(key, item);
-  component.value = item.component;
+function handleUpdateValue(key: string) {
+  router.push(key);
 }
 
-const menuOptions = [
-  // {
-  //   label: "Elements",
-  //   key: "elements",
-  //   icon: renderIcon(),
-  // },
-  stateMenu,
-  elementsMenu,
-  browserMenu,
-  sensorsMenu,
-  networkMenu,
-  animationMenu,
-  componentMenu,
-  watchMenu,
-  reactivityMenu,
-  arrayMenu,
-  timeMenu,
-  utilitiesMenu,
-];
+const formatterMenu = (list: any[]): any[] => {
+  return list.map((item) => {
+    // console.log(item);
+    const children = item.children ? formatterMenu(item.children) : undefined;
+    return {
+      label: item.meta.title,
+      key: item.path,
+      icon: item.meta.icon ? renderIcon(item.meta.icon + ' w-1em h-1em') : renderIcon(),
+      children,
+    };
+  });
+};
+const menuOptions = formatterMenu(aboutRoute);
 </script>
