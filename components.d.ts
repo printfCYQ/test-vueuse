@@ -43,6 +43,7 @@ declare module 'vue' {
     NTag: typeof import('naive-ui')['NTag']
     NTimePicker: typeof import('naive-ui')['NTimePicker']
     NTransfer: typeof import('naive-ui')['NTransfer']
+    OnClickOutside: typeof import('./src/components/Sensors/onClickOutside.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     UseActiveElement: typeof import('./src/components/Elements/useActiveElement.vue')['default']

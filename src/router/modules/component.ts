@@ -11,7 +11,7 @@ export default {
             name: 'UseVModel',
             meta: {
                 title: 'useVModel',
-                icon: 'carbon:cloud-upload',
+                icon: 'i-ic-baseline-backspace',
             },
             component: () => import('@/components/Component/useVModel/useVModel.vue'),
         },
@@ -19,8 +19,8 @@ export default {
             path: '/about/component/useVModels',
             name: 'UseVModels',
             meta: {
-                title: 'useVModels',
-                icon: 'carbon:cloud-upload',
+                title:'useVModels',
+                icon: 'i-ic:baseline-bolt',
             },
             component: () => import('@/components/Component/useVModels/useVModels.vue'),
         }
